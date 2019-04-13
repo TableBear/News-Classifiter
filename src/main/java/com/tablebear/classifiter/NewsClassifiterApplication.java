@@ -27,6 +27,7 @@ public class NewsClassifiterApplication implements CommandLineRunner {
         for (String str : args) {
             System.out.println(str);
         }
+        service.deleteDuplicateNews();
         service.runLoadModelAndUse();
         exit(0);
     }

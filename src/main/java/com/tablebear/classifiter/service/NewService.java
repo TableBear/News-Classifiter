@@ -1,5 +1,6 @@
 package com.tablebear.classifiter.service;
 
+import com.tablebear.classifiter.pojo.LowScoreNews;
 import com.tablebear.classifiter.pojo.News;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,13 @@ public class NewService {
     @Autowired
     Newsmapper newsMapper;
 
+    public List<News> getNewsCateIsNull() {
+        List<News> news = newsMapper.getNewsCateIsNull();
+        return news;
+    }
+
     public List<News> getAllNews() {
-        List<News> news = newsMapper.getNews();
+        List<News> news = newsMapper.getAllNews();
         return news;
     }
 
@@ -41,10 +47,25 @@ public class NewService {
                 System.out.println(result[i].label + "\t" +
                         classifier.getCategoryName(result[i].label) + "\t" +
                         result[i].prob);
-                news.setCate(result[i].label);
-                newsMapper.updateCate(news);
+                if (result[i].prob >= 0.9) {
+                    news.setCate(result[i].label);
+                    newsMapper.updateCate(news);
+                } else {
+                    LowScoreNews lowScoreNews = new LowScoreNews(news.getNid(), news.getAbstractTitle(), news.getContent(), result[i].prob);
+                    newsMapper.insertIntoLowScoreNews(lowScoreNews);
+                    System.out.println("插入成功");
+                }
             }
         }
     }
+
+    /**
+     * 删除重复的数据
+     */
+    public void deleteDuplicateNews() {
+        int num = newsMapper.deleteDuplicate();
+        System.out.println("删除" + num + "条重复数据");
+    }
+
 
 }
