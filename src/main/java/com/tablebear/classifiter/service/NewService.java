@@ -26,6 +26,11 @@ public class NewService {
         return news;
     }
 
+    public int deleteAllInLowScoreNews() {
+        int i = newsMapper.deleteAllInLowScoreNews();
+        return i;
+    }
+
     /**
      * 如果需要读取已经训练好的模型，再用其进行分类，可以按照本函数的代码调用分类器
      */
@@ -36,7 +41,7 @@ public class NewService {
         classifier.loadCategoryListFromFile("C:\\Users\\23904\\IdeaProjects\\NewsClassifiter\\src\\main\\resources\\news_model\\category");
         classifier.setTextClassifier(new LinearBigramChineseTextClassifier(classifier.getCategorySize()));
         classifier.getTextClassifier().loadModel("C:\\Users\\23904\\IdeaProjects\\NewsClassifiter\\src\\main\\resources\\news_model");
-        List<News> list = getAllNews();
+        List<News> list = getNewsCateIsNull();
         for (News news : list) {
             // 之后就可以使用分类器进行分类
             String text = news.getContent();

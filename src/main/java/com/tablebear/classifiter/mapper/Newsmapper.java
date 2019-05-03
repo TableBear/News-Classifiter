@@ -23,4 +23,6 @@ public interface Newsmapper {
     @Insert("insert into low_score_news values(#{nid},#{abstractTitle},#{content},#{score})")
     int insertIntoLowScoreNews(LowScoreNews lowScoreNews);
 
+    @Delete("delete from low_score_news")
+    int deleteAllInLowScoreNews();
 }
