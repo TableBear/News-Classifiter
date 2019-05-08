@@ -1,10 +1,9 @@
 package com.tablebear.classifiter.service;
 
-import com.tablebear.classifiter.pojo.LowScoreNews;
+import com.tablebear.classifiter.mapper.Newsmapper;
 import com.tablebear.classifiter.pojo.News;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.tablebear.classifiter.mapper.Newsmapper;
 import org.thunlp.text.classifiers.BasicTextClassifier;
 import org.thunlp.text.classifiers.ClassifyResult;
 import org.thunlp.text.classifiers.LinearBigramChineseTextClassifier;
@@ -16,6 +15,11 @@ public class NewService {
     @Autowired
     Newsmapper newsMapper;
 
+    /**
+     * 查找Cate是空值的News
+     *
+     * @return a list of News
+     */
     public List<News> getNewsCateIsNull() {
         List<News> news = newsMapper.getNewsCateIsNull();
         return news;
@@ -45,21 +49,15 @@ public class NewService {
         for (News news : list) {
             // 之后就可以使用分类器进行分类
             String text = news.getContent();
-            int topN = 1;  // 保留最有可能的3个结果
+            int topN = 1;  // 保留最有可能的1个结果
             ClassifyResult[] result = classifier.classifyText(text, topN);
             for (int i = 0; i < topN; ++i) {
                 // 输出分类编号，分类名称，以及概率值。
                 System.out.println(result[i].label + "\t" +
                         classifier.getCategoryName(result[i].label) + "\t" +
                         result[i].prob);
-                if (result[i].prob >= 0.9) {
-                    news.setCate(result[i].label);
-                    newsMapper.updateCate(news);
-                } else {
-                    LowScoreNews lowScoreNews = new LowScoreNews(news.getNid(), news.getAbstractTitle(), news.getContent(), result[i].prob);
-                    newsMapper.insertIntoLowScoreNews(lowScoreNews);
-                    System.out.println("插入成功");
-                }
+                news.setCate(result[i].label);
+                newsMapper.updateCate(news);
             }
         }
     }

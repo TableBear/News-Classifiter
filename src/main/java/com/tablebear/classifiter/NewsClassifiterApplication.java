@@ -23,11 +23,10 @@ public class NewsClassifiterApplication implements CommandLineRunner {
 
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         for (String str : args) {
             System.out.println(str);
         }
-        service.deleteAllInLowScoreNews();
         service.deleteDuplicateNews();
         service.runLoadModelAndUse();
         exit(0);
