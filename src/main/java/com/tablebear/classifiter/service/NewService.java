@@ -46,7 +46,11 @@ public class NewService {
         classifier.setTextClassifier(new LinearBigramChineseTextClassifier(classifier.getCategorySize()));
         classifier.getTextClassifier().loadModel("C:\\Users\\23904\\IdeaProjects\\NewsClassifiter\\src\\main\\resources\\news_model");
         List<News> list = getNewsCateIsNull();
+        System.out.println("共有" + list.size() + "个待分类的结果");
+        int count = 1;
         for (News news : list) {
+            System.out.print("正在进行第" + count + "个分类:");
+            ++count;
             // 之后就可以使用分类器进行分类
             String text = news.getContent();
             int topN = 1;  // 保留最有可能的1个结果
